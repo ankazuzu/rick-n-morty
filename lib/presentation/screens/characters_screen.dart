@@ -7,6 +7,7 @@ import '../widgets/loading_indicator.dart';
 import '../widgets/error_view.dart';
 import '../widgets/empty_state_view.dart';
 import '../widgets/portal_transition.dart';
+import '../widgets/offline_banner.dart';
 
 /// Главный экран со списком персонажей
 class CharactersScreen extends StatefulWidget {
@@ -101,12 +102,16 @@ class _CharactersScreenState extends State<CharactersScreen> {
       ),
       body: Consumer<CharactersViewModel>(
         builder: (context, viewModel, child) {
+          // Определяем offline режим
+          final bool isOfflineMode = viewModel.error != null && 
+                                     viewModel.characters.isNotEmpty;
+          
           // Состояние загрузки
           if (viewModel.isLoading && viewModel.characters.isEmpty) {
             return const LoadingIndicator(message: 'Загрузка персонажей...');
           }
 
-          // Состояние ошибки
+          // Состояние ошибки без кеша
           if (viewModel.error != null && viewModel.characters.isEmpty) {
             return ErrorView(
               message: viewModel.error!,
@@ -132,9 +137,16 @@ class _CharactersScreenState extends State<CharactersScreen> {
           }
 
           // Список персонажей
-          return RefreshIndicator(
-            onRefresh: () => viewModel.refresh(),
-            child: GridView.builder(
+          return Column(
+            children: [
+              // Баннер offline режима
+              if (isOfflineMode) const OfflineBanner(),
+              
+              // Список персонажей
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () => viewModel.refresh(),
+                  child: GridView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -175,6 +187,9 @@ class _CharactersScreenState extends State<CharactersScreen> {
                 );
               },
             ),
+                ),
+              ),
+            ],
           );
         },
       ),

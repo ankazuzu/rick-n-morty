@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/api_constants.dart';
+import '../../data/database/app_database.dart';
 import '../../data/datasources/character_remote_datasource.dart';
+import '../../data/datasources/character_local_datasource.dart';
 import '../../data/datasources/favorites_local_datasource.dart';
 import '../../data/repositories/character_repository_impl.dart';
 import '../../data/repositories/favorites_repository_impl.dart';
@@ -20,9 +22,11 @@ class ServiceLocator {
   // Сервисы
   late final Dio _dio;
   late final SharedPreferences _prefs;
+  late final AppDatabase _database;
 
   // Data sources
   late final CharacterRemoteDataSource _characterRemoteDataSource;
+  late final CharacterLocalDataSource _characterLocalDataSource;
   late final FavoritesLocalDataSource _favoritesLocalDataSource;
 
   // Repositories
@@ -38,6 +42,9 @@ class ServiceLocator {
   Future<void> init() async {
     // Инициализация SharedPreferences
     _prefs = await SharedPreferences.getInstance();
+    
+    // Инициализация базы данных Drift
+    _database = AppDatabase();
 
     // Инициализация Dio
     _dio = Dio(
@@ -53,10 +60,14 @@ class ServiceLocator {
 
     // Data sources
     _characterRemoteDataSource = CharacterRemoteDataSource(_dio);
+    _characterLocalDataSource = CharacterLocalDataSource(_database);
     _favoritesLocalDataSource = FavoritesLocalDataSource(_prefs);
 
     // Repositories
-    _characterRepository = CharacterRepositoryImpl(_characterRemoteDataSource);
+    _characterRepository = CharacterRepositoryImpl(
+      _characterRemoteDataSource,
+      _characterLocalDataSource,
+    );
     _favoritesRepository = FavoritesRepositoryImpl(_favoritesLocalDataSource);
 
     // ViewModels
@@ -77,5 +88,11 @@ class ServiceLocator {
   ThemeViewModel get themeViewModel => _themeViewModel;
   CharacterRepository get characterRepository => _characterRepository;
   FavoritesRepository get favoritesRepository => _favoritesRepository;
+  AppDatabase get database => _database;
+  
+  /// Очистка ресурсов
+  Future<void> dispose() async {
+    await _database.close();
+  }
 }
 

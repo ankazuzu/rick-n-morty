@@ -15,15 +15,12 @@ CharacterModel _$CharacterModelFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String,
       gender: json['gender'] as String,
       origin: CharacterLocationModel.fromJson(
-        json['origin'] as Map<String, dynamic>,
-      ),
+          json['origin'] as Map<String, dynamic>),
       location: CharacterLocationModel.fromJson(
-        json['location'] as Map<String, dynamic>,
-      ),
+          json['location'] as Map<String, dynamic>),
       image: json['image'] as String,
-      episode: (json['episode'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      episode:
+          (json['episode'] as List<dynamic>).map((e) => e as String).toList(),
       created: json['created'] as String,
     );
 
@@ -43,12 +40,15 @@ Map<String, dynamic> _$CharacterModelToJson(CharacterModel instance) =>
     };
 
 CharacterLocationModel _$CharacterLocationModelFromJson(
-  Map<String, dynamic> json,
-) => CharacterLocationModel(
-  name: json['name'] as String,
-  url: json['url'] as String,
-);
+        Map<String, dynamic> json) =>
+    CharacterLocationModel(
+      name: json['name'] as String,
+      url: json['url'] as String,
+    );
 
 Map<String, dynamic> _$CharacterLocationModelToJson(
-  CharacterLocationModel instance,
-) => <String, dynamic>{'name': instance.name, 'url': instance.url};
+        CharacterLocationModel instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'url': instance.url,
+    };

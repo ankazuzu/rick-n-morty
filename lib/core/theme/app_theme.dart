@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  // Rick and Morty цветовая палитра
-  static const Color portalGreen = Color(0xFF00D9FF); // Ярко-бирюзовый портал
-  static const Color acidGreen = Color(0xFF97CE4C); // Кислотно-зеленый
-  static const Color rickBlue = Color(0xFF44B3C2); // Синий халат Рика
-  static const Color spaceBlack = Color(0xFF0D1B2A); // Космический черный
-  static const Color labYellow = Color(0xFFF6DC6F); // Желтый лаборатории
-  static const Color portalPurple = Color(0xFF7D5BA6); // Фиолетовый портала
-  static const Color neonPink = Color(0xFFFF6EC7); // Неоновый розовый
+  // Цветовая палитра
+  static const Color portalGreen = Color(0xFF00D9FF);
+  static const Color acidGreen = Color(0xFF97CE4C);
+  static const Color rickBlue = Color(0xFF44B3C2);
+  static const Color spaceBlack = Color(0xFF0D1B2A);
+  static const Color labYellow = Color(0xFFF6DC6F);
+  static const Color portalPurple = Color(0xFF7D5BA6);
+  static const Color neonPink = Color(0xFFFF6EC7);
 
-  // Статусы персонажей (в стиле сериала)
-  static const Color statusAlive = Color(0xFF55D392); // Ярко-зеленый
-  static const Color statusDead = Color(0xFFFF5555); // Красный
-  static const Color statusUnknown = Color(0xFF9E9E9E); // Серый
+  // Статусы персонажей
+  static const Color statusAlive = Color(0xFF55D392);
+  static const Color statusDead = Color(0xFFFF5555);
+  static const Color statusUnknown = Color(0xFF9E9E9E);
 
-  /// Светлая тема в стиле Rick and Morty
+  /// Светлая тема
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -99,7 +99,7 @@ class AppTheme {
     );
   }
 
-  /// Темная тема в стиле Rick and Morty (космос/портал)
+  /// Темная тема
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
