@@ -27,6 +27,15 @@ class RickMortyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = AppRouter.createRouter();
 
+    // Связываем ViewModels для двусторонней синхронизации избранного
+    serviceLocator.charactersViewModel.onFavoritesChanged = () {
+      serviceLocator.favoritesViewModel.loadFavorites(silent: true);
+    };
+
+    serviceLocator.favoritesViewModel.onFavoritesChanged = () {
+      serviceLocator.charactersViewModel.refreshFavorites();
+    };
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<CharactersViewModel>(

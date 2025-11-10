@@ -14,6 +14,7 @@ enum FavoritesSortType {
 class FavoritesViewModel extends ChangeNotifier {
   final CharacterRepository _characterRepository;
   final FavoritesRepository _favoritesRepository;
+  VoidCallback? onFavoritesChanged;
 
   FavoritesViewModel(
     this._characterRepository,
@@ -53,12 +54,15 @@ class FavoritesViewModel extends ChangeNotifier {
   }
 
   /// Загрузить избранных персонажей
-  Future<void> loadFavorites() async {
+  Future<void> loadFavorites({bool silent = false}) async {
     if (_isLoading) return;
 
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
+    // Silent режим не показывает индикатор загрузки
+    if (!silent) {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+    }
 
     try {
       final favoriteIds = await _favoritesRepository.getFavoriteIds();
@@ -68,11 +72,14 @@ class FavoritesViewModel extends ChangeNotifier {
       } else {
         _favoriteCharacters = await _characterRepository.getCharactersByIds(favoriteIds);
       }
+      _error = null;
     } catch (e) {
       _error = e.toString();
       _favoriteCharacters = [];
     } finally {
-      _isLoading = false;
+      if (!silent) {
+        _isLoading = false;
+      }
       notifyListeners();
     }
   }
@@ -83,6 +90,9 @@ class FavoritesViewModel extends ChangeNotifier {
       await _favoritesRepository.removeFromFavorites(characterId);
       _favoriteCharacters.removeWhere((char) => char.id == characterId);
       notifyListeners();
+      
+      // Уведомляем об изменении избранного
+      onFavoritesChanged?.call();
     } catch (e) {
       _error = 'Не удалось удалить из избранного';
       notifyListeners();
@@ -108,6 +118,9 @@ class FavoritesViewModel extends ChangeNotifier {
       await _favoritesRepository.clearFavorites();
       _favoriteCharacters = [];
       notifyListeners();
+      
+      // Уведомляем об изменении избранного
+      onFavoritesChanged?.call();
     } catch (e) {
       _error = 'Не удалось очистить избранное';
       notifyListeners();

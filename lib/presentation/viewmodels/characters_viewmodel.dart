@@ -7,6 +7,7 @@ import '../../domain/repositories/favorites_repository.dart';
 class CharactersViewModel extends ChangeNotifier {
   final CharacterRepository _characterRepository;
   final FavoritesRepository _favoritesRepository;
+  VoidCallback? onFavoritesChanged;
 
   CharactersViewModel(
     this._characterRepository,
@@ -122,6 +123,12 @@ class CharactersViewModel extends ChangeNotifier {
     }
   }
 
+  /// Обновить список избранных (для синхронизации с FavoritesViewModel)
+  Future<void> refreshFavorites() async {
+    await _loadFavorites();
+    notifyListeners();
+  }
+
   /// Переключить избранное для персонажа
   Future<void> toggleFavorite(int characterId) async {
     try {
@@ -133,6 +140,9 @@ class CharactersViewModel extends ChangeNotifier {
         _favoriteIds.add(characterId);
       }
       notifyListeners();
+      
+      // Уведомляем об изменении избранного
+      onFavoritesChanged?.call();
     } catch (e) {
       _error = 'Не удалось обновить избранное';
       notifyListeners();
