@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/character.dart';
+import 'animated_favorite_button.dart';
 
 /// Карточка персонажа
 class CharacterCard extends StatelessWidget {
@@ -97,20 +98,15 @@ class CharacterCard extends StatelessWidget {
           child: Text(
             character.name,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        IconButton(
-          icon: Icon(
-            isFavorite ? Icons.star : Icons.star_border,
-            color: isFavorite ? AppTheme.acidGreen : Colors.grey,
-          ),
+        AnimatedFavoriteButton(
+          isFavorite: isFavorite,
           onPressed: onFavoriteToggle,
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
         ),
       ],
     );

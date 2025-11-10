@@ -7,6 +7,7 @@ import '../widgets/character_card.dart';
 import '../widgets/loading_indicator.dart';
 import '../widgets/error_view.dart';
 import '../widgets/empty_state_view.dart';
+import '../widgets/portal_transition.dart';
 
 /// Экран избранных персонажей
 class FavoritesScreen extends StatefulWidget {
@@ -60,7 +61,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 value: FavoritesSortType.byName,
                 child: Row(
                   children: [
-                    Icon(Icons.sort_by_alpha),
+                    Icon(Icons.sort_by_alpha, color: AppTheme.portalGreen),
                     SizedBox(width: 8),
                     Text('По имени'),
                   ],
@@ -70,7 +71,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 value: FavoritesSortType.byStatus,
                 child: Row(
                   children: [
-                    Icon(Icons.favorite),
+                    Icon(Icons.favorite, color: AppTheme.portalGreen),
                     SizedBox(width: 8),
                     Text('По статусу'),
                   ],
@@ -80,7 +81,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 value: FavoritesSortType.bySpecies,
                 child: Row(
                   children: [
-                    Icon(Icons.category),
+                    Icon(Icons.category, color: AppTheme.portalGreen),
                     SizedBox(width: 8),
                     Text('По виду'),
                   ],
@@ -132,7 +133,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             children: [
               // Заголовок с количеством
               Container(
-                padding: const EdgeInsets.all(16).copyWith(bottom: 0),
+                padding: const EdgeInsets.all(16),
 
                 child: Row(
                   children: [
@@ -162,26 +163,31 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 0.58,
+                          childAspectRatio: 0.55,
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
                         ),
                     itemCount: viewModel.favoriteCharacters.length,
                     itemBuilder: (context, index) {
                       final character = viewModel.favoriteCharacters[index];
-                      return CharacterCard(
-                        character: character,
-                        isFavorite: true,
-                        onTap: () {
-                          // TODO: Переход к детальной информации
-                        },
-                        onFavoriteToggle: () {
-                          _showRemoveConfirmationDialog(
-                            context,
-                            character.id,
-                            character.name,
-                          );
-                        },
+
+                      // Анимация появления и портальный эффект при удалении
+                      return PortalEntrance(
+                        index: index,
+                        child: CharacterCard(
+                          character: character,
+                          isFavorite: true,
+                          onTap: () {
+                            // TODO: Переход к детальной информации
+                          },
+                          onFavoriteToggle: () {
+                            _showRemoveConfirmationDialog(
+                              context,
+                              character.id,
+                              character.name,
+                            );
+                          },
+                        ),
                       );
                     },
                   ),

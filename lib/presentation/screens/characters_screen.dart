@@ -6,6 +6,7 @@ import '../widgets/character_card.dart';
 import '../widgets/loading_indicator.dart';
 import '../widgets/error_view.dart';
 import '../widgets/empty_state_view.dart';
+import '../widgets/portal_transition.dart';
 
 /// Главный экран со списком персонажей
 class CharactersScreen extends StatefulWidget {
@@ -138,7 +139,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.58,
+                childAspectRatio: 0.55,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
@@ -157,15 +158,20 @@ class _CharactersScreenState extends State<CharactersScreen> {
                 }
 
                 final character = viewModel.characters[index];
-                return CharacterCard(
-                  character: character,
-                  isFavorite: viewModel.isFavorite(character.id),
-                  onTap: () {
-                    // TODO: Переход к детальной информации
-                  },
-                  onFavoriteToggle: () {
-                    viewModel.toggleFavorite(character.id);
-                  },
+
+                // Анимация появления карточек
+                return PortalEntrance(
+                  index: index,
+                  child: CharacterCard(
+                    character: character,
+                    isFavorite: viewModel.isFavorite(character.id),
+                    onTap: () {
+                      // TODO: Переход к детальной информации
+                    },
+                    onFavoriteToggle: () {
+                      viewModel.toggleFavorite(character.id);
+                    },
+                  ),
                 );
               },
             ),
