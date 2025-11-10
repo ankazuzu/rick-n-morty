@@ -1,8 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 
+/// Основной тестовый файл
+///
+/// Тесты разделены по категориям:
+/// - test/domain/ - тесты доменных моделей
+/// - test/presentation/viewmodels/ - тесты ViewModels
+/// - test/presentation/widgets/ - тесты UI компонентов
+/// - test/core/ - тесты утилит и тем
 void main() {
-  testWidgets('App initialization test', (WidgetTester tester) async {
-    // TODO: Добавить тесты для приложения
-    expect(true, true);
+  test('placeholder test', () {
+    expect(1 + 1, 2);
   });
 }
